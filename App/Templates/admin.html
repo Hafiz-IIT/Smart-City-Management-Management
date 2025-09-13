@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="card">
+  <h3>Ward Equity Metrics</h3>
+  <table id="equityTable">
+    <thead><tr><th>Ward</th><th>Total</th><th>Resolved</th><th>Resolution %</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h3>Predictions</h3>
+  <button class="btn" onclick="predictTraffic()">Traffic Forecast</button>
+  <button class="btn" onclick="predictWaste()">Waste Overflow Forecast</button>
+  <pre id="predBox"></pre>
+</div>
+
+<script>
+async function loadEquity(){
+  const res = await fetch('/api/incidents');
+  const data = await res.json();
+  const wards = {'A':{tot:0,res:0},'B':{tot:0,res:0},'C':{tot:0,res:0}};
+  data.items.forEach(it=>{
+    wards[it.ward].tot++;
+    if(it.status==='resolved') wards[it.ward].res++;
+  });
+  const tbody = document.querySelector('#equityTable tbody');
+  tbody.innerHTML='';
+  Object.entries(wards).forEach(([w,v])=>{
+    const pct = v.tot? ((v.res/v.tot*100).toFixed(1)+'%'):'-';
+    tbody.innerHTML += `<tr><td>${w}</td><td>${v.tot}</td><td>${v.res}</td><td>${pct}</td></tr>`;
+  });
+}
+loadEquity();
+
+async function predictTraffic(){
+  const res = await fetch('/api/predict?type=traffic');
+  document.querySelector('#predBox').textContent = JSON.stringify(await res.json(),null,2);
+}
+async function predictWaste(){
+  const res = await fetch('/api/predict?type=waste');
+  document.querySelector('#predBox').textContent = JSON.stringify(await res.json(),null,2);
+}
+</script>
+{% endblock %}
