@@ -1,0 +1,39 @@
+### Get all incidents
+GET http://localhost:8000/api/incidents
+Accept: application/json
+
+###
+
+### Create a new incident (example pothole)
+POST http://localhost:8000/api/incidents
+Content-Type: application/json
+
+{
+  "description": "Big pothole near crossing",
+  "lat": 22.56,
+  "lng": 88.39,
+  "photoUrl": "https://placehold.co/200x200.png"
+}
+
+###
+
+### Update incident status (mark resolved)
+PATCH http://localhost:8000/api/incidents/{{incident_id}}
+Content-Type: application/json
+
+{
+  "status": "resolved",
+  "assignedTo": "Officer-101"
+}
+
+###
+
+### Get traffic prediction
+GET http://localhost:8000/api/predict?type=traffic
+Accept: application/json
+
+###
+
+### Get waste overflow prediction
+GET http://localhost:8000/api/predict?type=waste
+Accept: application/json
