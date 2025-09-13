@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title or "Smart City Twin" }}</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body { margin:0; font-family: system-ui, sans-serif; background:#0e121a; color:#f8fafc;}
+    header { background:#0009; backdrop-filter: blur(6px); padding:10px 20px; display:flex; justify-content:space-between; align-items:center; }
+    header a { color:#9aa4b2; margin-left:15px; text-decoration:none; }
+    header a:hover { color:#fff; }
+    main { padding:20px; }
+    .card { background:#1b1f29; padding:20px; border-radius:12px; margin-bottom:20px; }
+    .btn { background:#3d5ff2; color:#fff; border:none; border-radius:8px; padding:8px 14px; cursor:pointer; }
+    .btn:hover { background:#587fff; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding:8px; border-bottom:1px solid #333; text-align:left; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>🌆 <b>Smart City Twin</b></div>
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/incidents">Incidents</a>
+      <a href="/admin">Admin</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
