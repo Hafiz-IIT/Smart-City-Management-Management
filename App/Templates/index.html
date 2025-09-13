@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<div id="map" style="height:500px; border-radius:12px;"></div>
+
+<script>
+const map = L.map('map').setView([22.56, 88.39], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+let layers = {};
+function addOrUpdateLayer(type, lat, lng, value) {
+  const key = `${type}-${lat.toFixed(3)}-${lng.toFixed(3)}`;
+  if (layers[key]) { map.removeLayer(layers[key]); }
+  const color = {traffic:'red',aqi:'green',waste:'orange',noise:'blue'}[type];
+  layers[key] = L.circleMarker([lat,lng], {
+    radius:6, color:color, fillColor:color, fillOpacity:0.7
+  }).bindTooltip(`${type}: ${value}`).addTo(map);
+}
+
+// Connect to sensor stream
+const evt = new EventSource("/api/stream");
+evt.onmessage = (ev) => {
+  const d = JSON.parse(ev.data);
+  if(d.type==="sensors"){
+    d.payload.forEach(r => addOrUpdateLayer(r.type, r.lat, r.lng, r.value));
+  }
+};
+</script>
+{% endblock %}
