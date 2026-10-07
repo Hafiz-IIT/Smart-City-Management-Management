@@ -1,0 +1,1 @@
+Earlier smart-city management software prototype covering city-service workflows, incidents, mapping-oriented views and application logic.
