@@ -1,47 +1,53 @@
-# Smart-City-Management-Platform
-A living digital twin of your city, combining real-time sensors, AI prediction, citizen engagement, and gorgeous dashboards. It doesn’t just show data, it tells a story: “This is what’s happening, what’s about to happen, and how to fix it.”
+# Smart City Management System
 
-# 🌆 Smart City Management Platform (MVP)
+<p align="center"><strong>A Software Prototype for Urban Operations, Incidents and Spatial Monitoring</strong><br/><sub>Structured city data, incident workflows and a map-oriented operational view.</sub></p>
 
-**A digital twin of the city** — real-time sensors, citizen reporting, AI predictions, and equity dashboards.  
-Built with **FastAPI + Jinja2 + Leaflet**. No external API keys needed.
+<p align="center"><img src="https://img.shields.io/badge/stack-Python-blue" alt="Python"/> <img src="https://img.shields.io/badge/status-software%20prototype-purple" alt="Status"/></p>
 
----
+## Project question
 
-## ✨ Features
-- 📡 **Live Sensor Stream (SSE):** Simulated traffic, AQI, waste, noise sensors.
-- 📝 **Citizen Incident Reporting:** Submit potholes, leaks, garbage with SLA timers.
-- 🔮 **Prediction Stubs:** Forecast next-30m traffic & waste bin overflow.
-- ⚖️ **Equity Metrics:** Ward-level SLA resolution stats.
-- 🗺️ **Beautiful Map UI:** Leaflet-based dashboard with colored live markers.
-- 🔧 **Admin Tools:** View equity & run prediction demos.
+**How can a city-operations interface turn fragmented incidents and sensor-like information into an inspectable operational picture?**
 
----
+```
+City / sensor data
+       ↓
+Incident records
+       ↓
+API + operational rules
+       ↓
+Spatial / dashboard view
+       ↓
+Human decision
+```
 
-## 🛠️ Tech Stack
-- **Backend:** FastAPI, Pydantic, Uvicorn
-- **Frontend:** Jinja2 templates, Leaflet.js, Vanilla JS
-- **Data Store:** JSON file (MVP mode)
-- **Languages:** Python 3.10+
+## What is implemented
 
----
+The repository contains the earlier Smart City implementation with application/API components, testing infrastructure, architecture documentation and demo-data tooling.
 
-## 🚀 Quickstart
+The design explores:
 
-```bash
-# Clone repo
-git clone https://github.com/YOUR_USERNAME/smart-city-mvp.git
-cd smart-city-mvp
+- incident CRUD and classification
+- sensor-style data streams
+- map-oriented visualization
+- operational dashboards
+- demo-data seeding
+- REST/API testing
+- a path toward predictive city operations
 
-# Setup venv
-python -m venv .venv
-# Windows
-.venv\\Scripts\\activate
-# Linux/macOS
-source .venv/bin/activate
+## Why it matters in this portfolio
 
-# Install deps
-pip install -r requirements.txt
+This is an earlier systems project that connects to later work on:
 
-# Run server
-uvicorn app.main:app --reload --port 8000
+**operational state → evidence → prediction → human action**
+
+It is deliberately retained as historical engineering evidence rather than retroactively relabelled as a modern AI product.
+
+## Demo / exploration
+
+Use the repository's application setup and demo-data tooling to run the existing interface locally. The README and architecture files in the repository are the source of truth for its current implementation.
+
+## Boundary
+
+The system is a software prototype. It is not a deployed municipal digital twin and does not claim live city infrastructure integration.
+
+Related: [Institutional Evidence Tracker](https://github.com/Hafiz-IIT/institutional-evidence-tracker) · [Traffic Incident Routing Lab](https://github.com/Hafiz-IIT/traffic-incident-routing-lab)
