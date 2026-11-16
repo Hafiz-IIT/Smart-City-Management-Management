@@ -9,14 +9,25 @@ permissions:
 
 jobs:
   smoke-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: Install application dependencies
-        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
-      - name: Run demo smoke tests
-        working-directory: "Demo Data Seeder"
-        run: python -m unittest discover -s . -p "test_*.py" -v
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Import application and discover routes
+        run: |
+          python - <<'PY'
+          from App.main import app
+          paths = {route.path for route in app.routes}
+          required = {"/", "/incidents", "/admin", "/api/incidents", "/api/predict", "/api/stream"}
+          missing = required - paths
+          assert not missing, f"Missing routes: {sorted(missing)}"
+          print(f"Application import passed; {len(paths)} routes registered.")
+          PY
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
