@@ -10,11 +10,11 @@ router = APIRouter(prefix="/api/stream", tags=["stream"])
 
 
 async def event_gen():
-    yield "data: " + json.dumps({"type": "hello"}) + "\\n\\n"
+    yield "data: " + json.dumps({"type": "hello"}) + "\n\n"
     while True:
         batch = generate_sensor_batch()
         payload = [item.model_dump() for item in batch]
-        yield "data: " + json.dumps({"type": "sensors", "payload": payload}) + "\\n\\n"
+        yield "data: " + json.dumps({"type": "sensors", "payload": payload}) + "\n\n"
         await asyncio.sleep(1.5)
 
 
