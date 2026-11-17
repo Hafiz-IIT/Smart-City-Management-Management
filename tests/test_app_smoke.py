@@ -23,8 +23,7 @@ class ApplicationSmokeTests(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-
-def test_incident_classifier_does_not_default_unknown_text_to_garbage():
-    from App.API.incidents import classify
-    assert classify("garbage is overflowing near the market") == "garbage"
-    assert classify("hello, I have a general question") is None
+    def test_incident_classifier_does_not_default_unknown_text_to_garbage(self):
+        from App.API.incidents import classify
+        self.assertEqual(classify("garbage is overflowing near the market"), "garbage")
+        self.assertIsNone(classify("hello, I have a general question"))
