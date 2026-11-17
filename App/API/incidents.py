@@ -18,8 +18,8 @@ def classify(desc: str) -> str | None:
     if re.search(r"(leak|pipe|water|seep)", text):
         return "water-leak"
     if re.search(r"(garbage|bin|trash|waste)", text):
-        return None
-    return "garbage"
+        return "garbage"
+    return None
 
 
 @router.get("", response_model=dict)
