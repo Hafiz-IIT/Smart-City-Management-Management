@@ -73,6 +73,8 @@ def update_item(incident_id: str, payload: IncidentUpdate):
             raise HTTPException(status_code=422, detail="assignedTo is required when assigning an incident")
         data["status"] = payload.status
     if payload.assignedTo is not None:
+        if not payload.assignedTo.strip():
+            raise HTTPException(status_code=422, detail="assignedTo cannot be blank")
         if data["status"] != "assigned":
             raise HTTPException(status_code=409, detail="assignedTo can only be changed for an assigned incident")
         data["assignedTo"] = payload.assignedTo.strip()
