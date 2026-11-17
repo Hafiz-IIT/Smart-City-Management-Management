@@ -1,9 +1,9 @@
 # app/core/utils.py
-import random
 import time
+import uuid
 
 def uid() -> str:
-    return hex(int(time.time() * 1000))[2:] + str(random.randint(1000,9999))
+    return uuid.uuid4().hex
 
 def now_ms() -> int:
     return int(time.time() * 1000)
