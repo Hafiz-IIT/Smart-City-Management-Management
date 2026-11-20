@@ -4,7 +4,7 @@ import re
 from App.Core.Models import Incident, IncidentCreate, IncidentUpdate
 from App.Core.Auth import require_admin
 from App.Core.Utils import uid, now_ms, latlng_to_ward
-from App.Services.store import read_incidents, write_incidents
+from App.Services.store import read_incidents, mutate_incidents
 
 router = APIRouter(prefix="/api/incidents", tags=["incidents"])
 
@@ -44,9 +44,7 @@ def create_item(payload: IncidentCreate):
         slaHours=payload.slaHours,
         status="open",
     )
-    items = read_incidents()
-    items.append(item)
-    write_incidents(items)
+    mutate_incidents(lambda items: items.append(item))
     return {"ok": True, "item": item}
 
 
@@ -60,12 +58,15 @@ ALLOWED_STATUS_TRANSITIONS = {
 
 @router.patch("/{incident_id}", response_model=dict, dependencies=[Depends(require_admin)])
 def update_item(incident_id: str, payload: IncidentUpdate):
-    items = read_incidents()
-    try:
-        idx = next(i for i, item in enumerate(items) if item.id == incident_id)
-    except StopIteration:
-        raise HTTPException(status_code=404, detail="Not found")
-    data = items[idx].model_dump()
+    if not payload.model_fields_set:
+        raise HTTPException(status_code=400, detail="At least one update field is required")
+
+    def apply_update(items):
+        try:
+            idx = next(i for i, item in enumerate(items) if item.id == incident_id)
+        except StopIteration:
+            raise HTTPException(status_code=404, detail="Not found")
+        data = items[idx].model_dump()
     if payload.status is not None and payload.status != data["status"]:
         if payload.status not in ALLOWED_STATUS_TRANSITIONS[data["status"]]:
             raise HTTPException(status_code=409, detail=f"Invalid status transition: {data['status']} -> {payload.status}")
@@ -78,6 +79,8 @@ def update_item(incident_id: str, payload: IncidentUpdate):
         if data["status"] != "assigned":
             raise HTTPException(status_code=409, detail="assignedTo can only be changed for an assigned incident")
         data["assignedTo"] = payload.assignedTo.strip()
-    items[idx] = Incident(**data)
-    write_incidents(items)
-    return {"ok": True, "item": items[idx]}
+        items[idx] = Incident(**data)
+        return items[idx]
+
+    updated = mutate_incidents(apply_update)
+    return {"ok": True, "item": updated}
