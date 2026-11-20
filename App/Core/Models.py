@@ -23,14 +23,14 @@ class Incident(BaseModel):
     id: str = Field(min_length=1)
     ward: Ward
     type: IncidentType
-    description: str = Field(min_length=3)
+    description: str = Field(min_length=3, max_length=2000)
     photoUrl: Optional[HttpUrl] = None
     lat: float = Field(ge=-90, le=90, allow_inf_nan=False)
     lng: float = Field(ge=-180, le=180, allow_inf_nan=False)
     createdAt: int = Field(gt=0)
     slaHours: int = Field(default=24, ge=1, le=168)
     status: IncidentStatus = 'open'
-    assignedTo: Optional[str] = None
+    assignedTo: Optional[str] = Field(default=None, min_length=1, max_length=120)
 
 class IncidentCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -44,4 +44,4 @@ class IncidentCreate(BaseModel):
 class IncidentUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")
     status: Optional[IncidentStatus] = None
-    assignedTo: Optional[str] = Field(default=None, min_length=1)
+    assignedTo: Optional[str] = Field(default=None, min_length=1, max_length=120)
