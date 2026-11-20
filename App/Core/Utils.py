@@ -1,17 +1,11 @@
-# app/core/utils.py
-import random
+import secrets
 import time
-
 def uid() -> str:
-    return hex(int(time.time() * 1000))[2:] + str(random.randint(1000,9999))
-
+    return secrets.token_urlsafe(18)
 def now_ms() -> int:
     return int(time.time() * 1000)
-
 def latlng_to_ward(lat: float, lng: float) -> str:
-    # toy partitioning for demo (Kolkata-ish box)
-    if lng < 88.40 and lat >= 22.55:
-        return 'A'
-    if lng >= 88.40 and lat >= 22.55:
-        return 'B'
+    # Demonstration-only partition; replace with authoritative ward boundaries.
+    if lng < 88.40 and lat >= 22.55: return 'A'
+    if lng >= 88.40 and lat >= 22.55: return 'B'
     return 'C'
