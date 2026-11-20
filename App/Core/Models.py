@@ -1,43 +1,36 @@
-# app/core/models.py
 from pydantic import BaseModel, Field, HttpUrl
 from typing import Literal, Optional
-from datetime import datetime
-
 Ward = Literal['A', 'B', 'C']
 SensorType = Literal['traffic', 'aqi', 'waste', 'noise']
 IncidentType = Literal['pothole', 'streetlight', 'water-leak', 'garbage']
 IncidentStatus = Literal['open', 'assigned', 'resolved', 'expired']
-
 class SensorReading(BaseModel):
     id: str
     type: SensorType
-    lat: float
-    lng: float
+    lat: float = Field(ge=-90, le=90)
+    lng: float = Field(ge=-180, le=180)
     value: float
     ward: Ward
-    ts: int  # epoch ms
-
+    ts: int
 class Incident(BaseModel):
     id: str
     ward: Ward
     type: IncidentType
-    description: str
+    description: str = Field(min_length=3, max_length=2000)
     photoUrl: Optional[HttpUrl] = None
-    lat: float
-    lng: float
+    lat: float = Field(ge=-90, le=90)
+    lng: float = Field(ge=-180, le=180)
     createdAt: int
-    slaHours: int = 24
+    slaHours: int = Field(default=24, ge=1, le=168)
     status: IncidentStatus = 'open'
-    assignedTo: Optional[str] = None
-
+    assignedTo: Optional[str] = Field(default=None, min_length=1, max_length=120)
 class IncidentCreate(BaseModel):
-    description: str = Field(min_length=3)
+    description: str = Field(min_length=3, max_length=2000)
     type: Optional[IncidentType] = None
-    lat: float
-    lng: float
+    lat: float = Field(ge=-90, le=90)
+    lng: float = Field(ge=-180, le=180)
     photoUrl: Optional[HttpUrl] = None
     slaHours: int = Field(default=24, ge=1, le=168)
-
 class IncidentUpdate(BaseModel):
     status: Optional[IncidentStatus] = None
-    assignedTo: Optional[str] = None
+    assignedTo: Optional[str] = Field(default=None, min_length=1, max_length=120)
